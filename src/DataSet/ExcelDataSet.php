@@ -1,6 +1,7 @@
 <?php
 namespace ngyuki\DbImport\DataSet;
 
+use ngyuki\DbImport\DataRow;
 use ngyuki\DbImport\EmptyValue;
 use PHPExcel_Reader_Excel2007;
 
@@ -23,26 +24,25 @@ class ExcelDataSet implements \IteratorAggregate
 
             foreach ($excel->getSheetNames() as $name) {
                 $arr = $excel->getSheetByName($name)->toArray();
-                $arr = $this->processArray($arr);
-                yield $name => $arr;
+                yield $name => $this->processArray($name, $arr);
             }
         })();
     }
 
-    private function processArray($arr)
+    private function processArray($name, $arr)
     {
         $columns = array_shift($arr);
 
         $data = [];
 
-        foreach ($arr as $row) {
+        foreach ($arr as $line => $row) {
             $assoc = array_combine($columns, $row);
             if (!array_filter($assoc, function ($v) {
                 return strlen($v);
             })) {
                 continue;
             }
-            $data[] = array_map(
+            $assoc = array_map(
                 function ($v) {
                     if (strlen($v) === 0) {
                         return EmptyValue::val();
@@ -51,6 +51,7 @@ class ExcelDataSet implements \IteratorAggregate
                 },
                 $assoc
             );
+            $data[] = new DataRow($assoc, sprintf("%s [%s] (%d)", $this->file, $name, $line + 1));
         }
 
         return $data;

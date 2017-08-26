@@ -6,6 +6,7 @@ use Doctrine\DBAL\DBALException;
 use ngyuki\DbImport\DataSet\ExcelDataSet;
 use ngyuki\DbImport\DataSet\PhpFileDataSet;
 use ngyuki\DbImport\DataSet\YamlDataSet;
+use RuntimeException;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -164,7 +165,31 @@ class Importer
                     foreach ($rows as $row) {
                         $values = $this->query->values($table, $row);
                         yield null => $values;
-                        $this->query->insert($table, $values);
+                        try {
+                            $this->query->insert($table, $values);
+                        } catch (\Throwable $ex) {
+                            if ($row instanceof DataRow) {
+                                throw new RuntimeException(
+                                    sprintf(
+                                        '%s in %s ... %s',
+                                        $ex->getMessage(),
+                                        $row->getLocation(),
+                                        $this->pretty($values)
+                                    ),
+                                    $ex->getCode()
+                                );
+                            } else {
+                                throw new RuntimeException(
+                                    sprintf(
+                                        '%s in [%s] ... %s',
+                                        $ex->getMessage(),
+                                        $table,
+                                        $this->pretty($values)
+                                    ),
+                                    $ex->getCode()
+                                );
+                            }
+                        }
                         yield '.' => null;
                         $num++;
                     }

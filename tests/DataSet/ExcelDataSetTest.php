@@ -20,16 +20,25 @@ class ExcelDataSetTest extends TestCase
     {
         $example = __DIR__ . '/../../example';
         $data = new ExcelDataSet("$example/files/004.xlsx");
+        $data = iterator_to_array($data);
 
-        $arr = iterator_to_array($data);
+        array_walk_recursive($data, function (&$val) {
+            if ($val instanceof \Traversable) {
+                $val = iterator_to_array($val);
+            }
+        });
 
-        $emp = EmptyValue::val();
+        array_walk_recursive($data, function (&$val) {
+            if ($val instanceof EmptyValue) {
+                $val = null;
+            }
+        });
 
-        assertThat($arr, equalTo([
+        assertThat($data, equalTo([
             'xxx' => [
                 ['id' => 1, 'no' => 1000, 'name' => 'aa', 'memo' => 'aaa'],
-                ['id' => 2, 'no' => $emp, 'name' => 'bb', 'memo' => $emp],
-                ['id' => 3, 'no' => 3000, 'name' => $emp, 'memo' => 'ccc'],
+                ['id' => 2, 'no' => null, 'name' => 'bb', 'memo' => null],
+                ['id' => 3, 'no' => 3000, 'name' => null, 'memo' => 'ccc'],
             ],
         ]));
     }

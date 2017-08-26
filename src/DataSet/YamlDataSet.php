@@ -1,6 +1,7 @@
 <?php
 namespace ngyuki\DbImport\DataSet;
 
+use ngyuki\DbImport\DataRow;
 use Symfony\Component\Yaml\Yaml;
 
 class YamlDataSet implements \IteratorAggregate
@@ -17,7 +18,16 @@ class YamlDataSet implements \IteratorAggregate
         $file = file_get_contents($this->file);
         $arr = Yaml::parse($file);
         $arr = $this->filterDot($arr);
-        return new \ArrayIterator($arr);
+
+        $res = [];
+
+        foreach ($arr as $t => $rows) {
+            foreach ($rows as $i => $row) {
+                $res[$t][$i] = new DataRow($row, sprintf("%s [%s]", $this->file, $t));
+            }
+        }
+
+        return new \ArrayIterator($res);
     }
 
     private function filterDot($arr)
