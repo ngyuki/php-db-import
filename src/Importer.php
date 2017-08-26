@@ -13,9 +13,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Importer
 {
     /**
-     * @var Connection
+     * @var Query
      */
-    private $conn;
+    private $query;
 
     /**
      * @var OutputInterface
@@ -39,7 +39,7 @@ class Importer
 
     public function __construct(Connection $connection, OutputInterface $output = null)
     {
-        $this->conn = $connection;
+        $this->query = new Query($connection);
         $this->output = $output ?? new NullOutput();
     }
 
@@ -127,7 +127,7 @@ class Importer
                 if ($this->output->isDebug()) {
                     $this->output->writeln($sql);
                 }
-                $this->conn->exec($sql);
+                $this->query->exec($sql);
             }
             if ($this->delete) {
                 $this->down($tables);
@@ -137,7 +137,7 @@ class Importer
                 if ($this->output->isDebug()) {
                     $this->output->writeln($sql);
                 }
-                $this->conn->exec($sql);
+                $this->query->exec($sql);
             }
         } catch (DBALException $ex) {
             // DB エラーでは $previous を切る
@@ -154,8 +154,9 @@ class Importer
                 function () use ($rows, $table) {
                     $num = 0;
                     foreach ($rows as $row) {
-                        yield null => $row;
-                        $this->conn->insert($this->conn->quoteIdentifier($table), $row);
+                        $values = $this->query->values($table, $row);
+                        yield null => $values;
+                        $this->query->insert($table, $values);
                         yield '.' => null;
                         $num++;
                     }
@@ -171,7 +172,7 @@ class Importer
 
         foreach ($tables as $table) {
             $this->output->write("<info>[$table]</info> DELETE .");
-            $num = $this->conn->createQueryBuilder()->delete($this->conn->quoteIdentifier($table))->execute();
+            $num = $this->query->delete($table);
             $this->output->writeln(".. $num rows done");
         }
     }

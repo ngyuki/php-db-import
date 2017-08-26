@@ -1,6 +1,7 @@
 <?php
 namespace ngyuki\DbImport\DataSet;
 
+use ngyuki\DbImport\EmptyValue;
 use PHPExcel_Reader_Excel2007;
 
 class ExcelDataSet implements \IteratorAggregate
@@ -36,9 +37,18 @@ class ExcelDataSet implements \IteratorAggregate
 
         foreach ($arr as $row) {
             $assoc = array_combine($columns, $row);
-            if (array_filter($assoc, function ($v) { return strlen($v); })) {
-                $data[] = array_combine($columns, $row);
+            if (!array_filter($assoc, function ($v) { return strlen($v); })) {
+                continue;
             }
+            $data[] = array_map(
+                function ($v) {
+                    if (strlen($v) === 0) {
+                        return EmptyValue::val();
+                    }
+                    return $v;
+                },
+                $assoc
+            );
         }
 
         return $data;

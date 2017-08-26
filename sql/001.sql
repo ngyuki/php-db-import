@@ -15,5 +15,7 @@ create table bbb (
 
 create table xxx (
   id int not null primary key auto_increment,
-  name varchar (255)
+  no int,
+  name varchar (255) not null,
+  memo varchar (255)
 );
