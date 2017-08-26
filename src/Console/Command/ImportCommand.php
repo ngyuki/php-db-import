@@ -41,13 +41,13 @@ class ImportCommand extends Command
         $connection = (new ConnectionManager())->getConnection($config);
 
         $importer = new Importer($connection, $output);
-        $importer->addBeforeSql($config['sql.before'] ?? []);
-        $importer->addAfterSql($config['sql.after'] ?? []);
+        $importer = $importer->addBeforeSql($config['sql.before'] ?? []);
+        $importer = $importer->addAfterSql($config['sql.after'] ?? []);
         if ($input->getOption('delete')) {
-            $importer->setDelete(true);
+            $importer = $importer->useDelete(true);
         }
 
-        $files = $input->getArgument('files');
-        $importer->importFiles($files);
+        $importer = $importer->addFiles($input->getArgument('files'));
+        $importer->import();
     }
 }

@@ -22,8 +22,9 @@ class ImporterTest extends TestCase
         $connection = (new ConnectionManager())->getConnection($config);
 
         (new Importer($connection))
-            ->setDelete(true)
-            ->importFiles(glob("$example/files/*"));
+            ->useDelete(true)
+            ->addFiles(glob("$example/files/*"))
+            ->import();
 
         assertTrue(true);
     }

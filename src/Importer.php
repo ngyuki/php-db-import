@@ -39,6 +39,11 @@ class Importer
      */
     private $after = [];
 
+    /**
+     * @var DataSetInterface[]
+     */
+    private $datalist = [];
+
     public function __construct(Connection $connection, OutputInterface $output = null)
     {
         $this->query = new Query($connection);
@@ -47,38 +52,42 @@ class Importer
 
     /**
      * @param bool $val
-     * @return $this
+     * @return static
      */
-    public function setDelete($val)
+    public function useDelete($val)
     {
-        $this->delete = $val;
-        return $this;
+        $obj = clone $this;
+        $obj->delete = $val;
+        return $obj;
     }
 
     /**
      * @param string|string[] $sql
-     * @return $this
+     * @return static
      */
     public function addBeforeSql($sql)
     {
-        $this->before = array_merge($this->before, (array)$sql);
-        return $this;
+        $obj = clone $this;
+        $obj->before = array_merge($obj->before, (array)$sql);
+        return $obj;
     }
 
     /**
      * @param string|string[] $sql
-     * @return $this
+     * @return static
      */
     public function addAfterSql($sql)
     {
-        $this->after = array_merge($this->after, (array)$sql);
-        return $this;
+        $obj = clone $this;
+        $obj->after = array_merge($obj->after, (array)$sql);
+        return $obj;
     }
 
     /**
      * @param string[] $files
+     * @return static
      */
-    public function importFiles(array $files)
+    public function addFiles(array $files)
     {
         $extensions = [
             'php' => function ($file) {
@@ -109,17 +118,25 @@ class Importer
             $list[] = $loader($file);
         }
 
-        $this->importDataSet($list);
+        return $this->addDataSet($list);
     }
 
     /**
      * @param DataSetInterface[] $list
+     * @return static
      */
-    public function importDataSet(array $list)
+    public function addDataSet(array $list)
+    {
+        $obj = clone $this;
+        $obj->datalist = array_merge($obj->datalist, $list);
+        return $obj;
+    }
+
+    public function import()
     {
         $tables = [];
 
-        foreach ($list as $dataSet) {
+        foreach ($this->datalist as $dataSet) {
             foreach ($dataSet->getData() as $table => $rows) {
                 foreach ($rows as $row) {
                     $tables[$table][] = $row;
@@ -127,10 +144,10 @@ class Importer
             }
         }
 
-        $this->import($tables);
+        $this->importTables($tables);
     }
 
-    private function import(array $tables)
+    private function importTables(array $tables)
     {
         try {
             foreach ($this->before as $sql) {
