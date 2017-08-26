@@ -1,5 +1,5 @@
 {
-    "name": "ngyuki/php-db-import",
+    "name": "ngyuki/db-import",
     "description": "Simple database import tool",
     "type": "library",
     "keywords": [ "database" ],
