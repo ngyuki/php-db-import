@@ -33,7 +33,6 @@ class ConfigLoader
         }
 
         if (is_dir($path)) {
-
             $files = array(
                 'db-import.config.php',
                 'db-import.config.php.dist',

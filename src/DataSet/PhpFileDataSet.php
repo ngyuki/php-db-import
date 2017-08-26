@@ -13,7 +13,7 @@ class PhpFileDataSet implements \IteratorAggregate
     public function getIterator()
     {
         /** @noinspection PhpIncludeInspection */
-        $arr = include $this->file;;
+        $arr = include $this->file;
         return new \ArrayIterator($arr);
     }
 }

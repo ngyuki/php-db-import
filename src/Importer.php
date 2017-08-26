@@ -79,10 +79,18 @@ class Importer
     public function importFiles(array $files)
     {
         $extensions = [
-            'php' => function ($file) { return new PhpFileDataSet($file); },
-            'yml' => function ($file) { return new YamlDataSet($file); },
-            'yaml' => function ($file) { return new YamlDataSet($file); },
-            'xlsx' => function ($file) { return new ExcelDataSet($file); },
+            'php' => function ($file) {
+                return new PhpFileDataSet($file);
+            },
+            'yml' => function ($file) {
+                return new YamlDataSet($file);
+            },
+            'yaml' => function ($file) {
+                return new YamlDataSet($file);
+            },
+            'xlsx' => function ($file) {
+                return new ExcelDataSet($file);
+            },
         ];
 
         $list = [];

@@ -37,7 +37,9 @@ class ExcelDataSet implements \IteratorAggregate
 
         foreach ($arr as $row) {
             $assoc = array_combine($columns, $row);
-            if (!array_filter($assoc, function ($v) { return strlen($v); })) {
+            if (!array_filter($assoc, function ($v) {
+                return strlen($v);
+            })) {
                 continue;
             }
             $data[] = array_map(
@@ -54,8 +56,3 @@ class ExcelDataSet implements \IteratorAggregate
         return $data;
     }
 }
-
-
-
-
-
