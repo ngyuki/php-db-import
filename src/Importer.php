@@ -5,6 +5,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use ngyuki\DbImport\DataSet\PhpFileDataSet;
 use ngyuki\DbImport\DataSet\YamlDataSet;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -136,7 +137,7 @@ class Importer
         $num = $this->conn->createQueryBuilder()->delete($tableExpr)->execute();
         $this->output->writeln(".. $num rows done");
 
-        $this->progress("$logPrefix INSERT", function () use ($rows, $tableExpr) {
+        $this->progress("$logPrefix INSERT", count($rows), function () use ($rows, $tableExpr) {
 
             $num = 0;
 
@@ -151,10 +152,17 @@ class Importer
         });
     }
 
-    private function progress($start, callable $callback)
+    private function progress($start, $total, callable $callback)
     {
+        /* @var $progress ProgressBar */
+        $progress = null;
+
         if ($this->output->isDebug()) {
             $this->output->writeln("$start ...");
+        } elseif ($this->output->isVeryVerbose()) {
+            $this->output->writeln("$start ...");
+            $progress = new ProgressBar($this->output, $total);
+            $progress->start();
         } elseif ($this->output->isVerbose()) {
             $this->output->write("$start ");
         } else {
@@ -172,6 +180,8 @@ class Importer
             } else {
                 if ($this->output->isDebug()) {
                     // none
+                } elseif ($this->output->isVeryVerbose()) {
+                    $progress->advance();
                 } elseif ($this->output->isVerbose()) {
                     $this->output->write($key);
                 }
@@ -182,6 +192,9 @@ class Importer
 
         if ($this->output->isDebug()) {
             $this->output->writeln("    ... $end");
+        } elseif ($this->output->isVeryVerbose()) {
+            $progress->finish();
+            $this->output->writeln(" ... $end");
         } elseif ($this->output->isVerbose()) {
             $this->output->writeln(" $end");
         } else {
