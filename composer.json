@@ -27,5 +27,8 @@
         "psr-4": {
             "ngyuki\\DbImport\\": "src/"
         }
-    }
+    },
+    "bin": [
+        "bin/db-import"
+    ]
 }
