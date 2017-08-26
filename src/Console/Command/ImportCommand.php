@@ -19,6 +19,7 @@ class ImportCommand extends Command
         $this->setName('import')->setDescription('Execute scripts')
             ->addArgument('files', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'Import files.')
             ->addOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Config file or directory.')
+            ->addOption('delete', 'd', InputOption::VALUE_NONE, 'First delete all rows from table.')
         ;
     }
 
@@ -42,6 +43,9 @@ class ImportCommand extends Command
         $importer = new Importer($connection, $output);
         $importer->addBeforeSql($config['sql.before'] ?? []);
         $importer->addAfterSql($config['sql.after'] ?? []);
+        if ($input->getOption('delete')) {
+            $importer->setDelete(true);
+        }
 
         $files = $input->getArgument('files');
         $importer->importFiles($files);

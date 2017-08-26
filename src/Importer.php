@@ -22,6 +22,11 @@ class Importer
     private $output;
 
     /**
+     * @var bool
+     */
+    private $delete;
+
+    /**
      * @var string[]
      */
     private $before = [];
@@ -35,6 +40,16 @@ class Importer
     {
         $this->conn = $connection;
         $this->output = $output ?? new NullOutput();
+    }
+
+    /**
+     * @param bool $val
+     * @return $this
+     */
+    public function setDelete($val)
+    {
+        $this->delete = $val;
+        return $this;
     }
 
     /**
@@ -133,9 +148,11 @@ class Importer
 
         $logPrefix  = "<info>[$table]</info>";
 
-        $this->output->write("$logPrefix DELETE .");
-        $num = $this->conn->createQueryBuilder()->delete($tableExpr)->execute();
-        $this->output->writeln(".. $num rows done");
+        if ($this->delete) {
+            $this->output->write("$logPrefix DELETE .");
+            $num = $this->conn->createQueryBuilder()->delete($tableExpr)->execute();
+            $this->output->writeln(".. $num rows done");
+        }
 
         $this->progress("$logPrefix INSERT", count($rows), function () use ($rows, $tableExpr) {
 

@@ -40,7 +40,7 @@ class ApplicationTest extends TestCase
     public function import_ok()
     {
         $example = __DIR__ . '/../../example';
-        $code = $this->dispatch(array_merge(['import', '-c', $example], glob("$example/files/*")));
+        $code = $this->dispatch(array_merge(['import', '-c', $example, '-d'], glob("$example/files/*")));
         assertThat($code, equalTo(0));
     }
 
@@ -50,7 +50,7 @@ class ApplicationTest extends TestCase
     public function import_v()
     {
         $example = __DIR__ . '/../../example';
-        $code = $this->dispatch(array_merge(['import', '-c', $example, '-v'], glob("$example/files/*")));
+        $code = $this->dispatch(array_merge(['import', '-c', $example, '-d', '-v'], glob("$example/files/*")));
         assertThat($code, equalTo(0));
     }
 
@@ -60,7 +60,7 @@ class ApplicationTest extends TestCase
     public function import_vvv()
     {
         $example = __DIR__ . '/../../example';
-        $code = $this->dispatch(array_merge(['import', '-c', $example, '-vvv'], glob("$example/files/*")));
+        $code = $this->dispatch(array_merge(['import', '-c', $example, '-d', '-vvv'], glob("$example/files/*")));
         assertThat($code, equalTo(0));
     }
 }
