@@ -3,7 +3,7 @@ namespace ngyuki\DbImport\DataSet;
 
 use ngyuki\DbImport\DataRow;
 
-class PhpFileDataSet implements \IteratorAggregate
+class PhpFileDataSet implements DataSetInterface
 {
     private $file;
 
@@ -20,7 +20,7 @@ class PhpFileDataSet implements \IteratorAggregate
         }
     }
 
-    public function getIterator()
+    public function getData()
     {
         /** @noinspection PhpIncludeInspection */
         $arr = include $this->file;
@@ -29,14 +29,14 @@ class PhpFileDataSet implements \IteratorAggregate
             throw new \RuntimeException("File read failed ... $this->file");
         }
 
-        $res = [];
+        $tables = [];
 
-        foreach ($arr as $t => $rows) {
-            foreach ($rows as $i => $row) {
-                $res[$t][$i] = new DataRow($row, sprintf("%s [%s]", $this->file, $t));
+        foreach ($arr as $table => $rows) {
+            foreach ($rows as $row) {
+                $tables[$table][] = new DataRow($row, sprintf("%s [%s]", $this->file, $table));
             }
         }
 
-        return new \ArrayIterator($res);
+        return $tables;
     }
 }

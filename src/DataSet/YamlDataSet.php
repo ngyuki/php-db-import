@@ -4,7 +4,7 @@ namespace ngyuki\DbImport\DataSet;
 use ngyuki\DbImport\DataRow;
 use Symfony\Component\Yaml\Yaml;
 
-class YamlDataSet implements \IteratorAggregate
+class YamlDataSet implements DataSetInterface
 {
     private $file;
 
@@ -21,7 +21,7 @@ class YamlDataSet implements \IteratorAggregate
         }
     }
 
-    public function getIterator()
+    public function getData()
     {
         $file = file_get_contents($this->file);
 
@@ -35,27 +35,18 @@ class YamlDataSet implements \IteratorAggregate
             throw new \RuntimeException("Unable parse file ... $this->file");
         }
 
-        $arr = $this->filterDot($arr);
+        $tables = [];
 
-        $res = [];
-
-        foreach ($arr as $t => $rows) {
-            foreach ($rows as $i => $row) {
-                $res[$t][$i] = new DataRow($row, sprintf("%s [%s]", $this->file, $t));
+        foreach ($arr as $table => $rows) {
+            // ドットから始まるテーブル名は除外
+            if ($table[0] === '.') {
+                continue;
+            }
+            foreach ($rows as $row) {
+                $tables[$table][] = new DataRow($row, sprintf("%s [%s]", $this->file, $table));
             }
         }
 
-        return new \ArrayIterator($res);
-    }
-
-    private function filterDot($arr)
-    {
-        $res = [];
-        foreach ($arr as $key => $val) {
-            if ($key[0] !== '.') {
-                $res[$key] = $val;
-            }
-        }
-        return $res;
+        return $tables;
     }
 }

@@ -1,11 +1,8 @@
 <?php
 namespace ngyuki\DbImport\Test\DataSet;
 
-use ngyuki\DbImport\Console\ConfigLoader;
-use ngyuki\DbImport\Console\ConnectionManager;
 use ngyuki\DbImport\DataSet\ExcelDataSet;
 use ngyuki\DbImport\EmptyValue;
-use ngyuki\DbImport\Importer;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -20,7 +17,7 @@ class ExcelDataSetTest extends TestCase
     {
         $example = __DIR__ . '/../../example';
         $data = new ExcelDataSet("$example/files/004.xlsx");
-        $data = iterator_to_array($data);
+        $data = $data->getData();
 
         array_walk_recursive($data, function (&$val) {
             if ($val instanceof \Traversable) {

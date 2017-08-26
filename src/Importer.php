@@ -3,6 +3,7 @@ namespace ngyuki\DbImport;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
+use ngyuki\DbImport\DataSet\DataSetInterface;
 use ngyuki\DbImport\DataSet\ExcelDataSet;
 use ngyuki\DbImport\DataSet\PhpFileDataSet;
 use ngyuki\DbImport\DataSet\YamlDataSet;
@@ -112,14 +113,14 @@ class Importer
     }
 
     /**
-     * @param \Traversable[] $list
+     * @param DataSetInterface[] $list
      */
     public function importDataSet(array $list)
     {
         $tables = [];
 
         foreach ($list as $dataSet) {
-            foreach ($dataSet as $table => $rows) {
+            foreach ($dataSet->getData() as $table => $rows) {
                 foreach ($rows as $row) {
                     $tables[$table][] = $row;
                 }
