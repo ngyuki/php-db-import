@@ -20,7 +20,8 @@
     },
     "require-dev": {
         "symfony/yaml": "^3.3",
-        "phpoffice/phpexcel": "^1.8"
+        "phpoffice/phpexcel": "^1.8",
+        "ngyuki/phpunit-functions": "^1.0"
     },
     "autoload": {
         "psr-4": {
