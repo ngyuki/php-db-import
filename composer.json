@@ -23,6 +23,10 @@
         "phpoffice/phpexcel": "^1.8",
         "ngyuki/phpunit-functions": "^1.0"
     },
+    "suggest": {
+        "symfony/yaml": "",
+        "phpoffice/phpexcel": ""
+    },
     "autoload": {
         "psr-4": {
             "ngyuki\\DbImport\\": "src/"
