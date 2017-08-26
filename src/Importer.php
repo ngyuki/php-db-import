@@ -3,6 +3,7 @@ namespace ngyuki\DbImport;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
+use ngyuki\DbImport\DataSet\ExcelDataSet;
 use ngyuki\DbImport\DataSet\PhpFileDataSet;
 use ngyuki\DbImport\DataSet\YamlDataSet;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -81,6 +82,7 @@ class Importer
             'php' => function ($file) { return new PhpFileDataSet($file); },
             'yml' => function ($file) { return new YamlDataSet($file); },
             'yaml' => function ($file) { return new YamlDataSet($file); },
+            'xlsx' => function ($file) { return new ExcelDataSet($file); },
         ];
 
         $list = [];
