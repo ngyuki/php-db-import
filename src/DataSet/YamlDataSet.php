@@ -10,13 +10,31 @@ class YamlDataSet implements \IteratorAggregate
 
     public function __construct($file)
     {
-        $this->file = $file;
+        $this->file = realpath($file);
+
+        if ($this->file === false) {
+            throw new \RuntimeException("File not found ... $file");
+        }
+
+        if (is_readable($this->file) === false) {
+            throw new \RuntimeException("File not readable ... $this->file");
+        }
     }
 
     public function getIterator()
     {
         $file = file_get_contents($this->file);
+
+        if ($file === false) {
+            throw new \RuntimeException("File read failed ... $this->file");
+        }
+
         $arr = Yaml::parse($file);
+
+        if ($arr === false) {
+            throw new \RuntimeException("Unable parse file ... $this->file");
+        }
+
         $arr = $this->filterDot($arr);
 
         $res = [];
