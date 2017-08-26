@@ -20,10 +20,40 @@ class Importer
      */
     private $output;
 
+    /**
+     * @var string[]
+     */
+    private $before = [];
+
+    /**
+     * @var string[]
+     */
+    private $after = [];
+
     public function __construct(Connection $connection, OutputInterface $output = null)
     {
         $this->conn = $connection;
         $this->output = $output ?? new NullOutput();
+    }
+
+    /**
+     * @param string|string[] $sql
+     * @return $this
+     */
+    public function addBeforeSql($sql)
+    {
+        $this->before = array_merge($this->before, (array)$sql);
+        return $this;
+    }
+
+    /**
+     * @param string|string[] $sql
+     * @return $this
+     */
+    public function addAfterSql($sql)
+    {
+        $this->after = array_merge($this->after, (array)$sql);
+        return $this;
     }
 
     /**
@@ -75,8 +105,20 @@ class Importer
     private function import(array $tables)
     {
         try {
+            foreach ($this->before as $sql) {
+                if ($this->output->isDebug()) {
+                    $this->output->writeln($sql);
+                }
+                $this->conn->exec($sql);
+            }
             foreach ($tables as $table => $rows) {
                 $this->importTable($table, $rows);
+            }
+            foreach ($this->after as $sql) {
+                if ($this->output->isDebug()) {
+                    $this->output->writeln($sql);
+                }
+                $this->conn->exec($sql);
             }
         } catch (DBALException $ex) {
             // DB エラーでは $previous を切る

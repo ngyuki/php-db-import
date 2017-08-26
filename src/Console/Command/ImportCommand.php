@@ -40,6 +40,8 @@ class ImportCommand extends Command
         $connection = (new ConnectionManager())->getConnection($config);
 
         $importer = new Importer($connection, $output);
+        $importer->addBeforeSql($config['sql.before'] ?? []);
+        $importer->addAfterSql($config['sql.after'] ?? []);
 
         $files = $input->getArgument('files');
         $importer->importFiles($files);
