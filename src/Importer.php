@@ -127,9 +127,10 @@ class Importer
                 }
                 $this->conn->exec($sql);
             }
-            foreach ($tables as $table => $rows) {
-                $this->importTable($table, $rows);
+            if ($this->delete) {
+                $this->down($tables);
             }
+            $this->up($tables);
             foreach ($this->after as $sql) {
                 if ($this->output->isDebug()) {
                     $this->output->writeln($sql);
@@ -142,31 +143,35 @@ class Importer
         }
     }
 
-    protected function importTable($table, $rows)
+    private function up(array $tables)
     {
-        $tableExpr = $this->conn->quoteIdentifier($table);
+        foreach ($tables as $table => $rows) {
+            $this->progress(
+                "<info>[$table]</info> INSERT",
+                count($rows),
+                function () use ($rows, $table) {
+                    $num = 0;
+                    foreach ($rows as $row) {
+                        yield null => $row;
+                        $this->conn->insert($this->conn->quoteIdentifier($table), $row);
+                        yield '.' => null;
+                        $num++;
+                    }
+                    return "$num rows done";
+                }
+            );
+        }
+    }
 
-        $logPrefix  = "<info>[$table]</info>";
+    private function down(array $tables)
+    {
+        $tables = array_reverse(array_keys($tables));
 
-        if ($this->delete) {
-            $this->output->write("$logPrefix DELETE .");
-            $num = $this->conn->createQueryBuilder()->delete($tableExpr)->execute();
+        foreach ($tables as $table) {
+            $this->output->write("<info>[$table]</info> DELETE .");
+            $num = $this->conn->createQueryBuilder()->delete($this->conn->quoteIdentifier($table))->execute();
             $this->output->writeln(".. $num rows done");
         }
-
-        $this->progress("$logPrefix INSERT", count($rows), function () use ($rows, $tableExpr) {
-
-            $num = 0;
-
-            foreach ($rows as $row) {
-                yield null => $row;
-                $this->conn->insert($tableExpr, $row);
-                yield '.' => null;
-                $num++;
-            }
-
-            return "$num rows done";
-        });
     }
 
     private function progress($start, $total, callable $callback)
