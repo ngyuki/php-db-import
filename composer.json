@@ -1,0 +1,30 @@
+{
+    "name": "ngyuki/php-db-import",
+    "description": "Simple database import tool",
+    "type": "library",
+    "keywords": [ "database" ],
+    "homepage": "https://github.com/ngyuki/php-db-import",
+    "license": "MIT",
+    "authors": [
+        { "name": "ngyuki", "email": "ngyuki.jp@gmail.com" }
+    ],
+    "config": {
+        "platform": {
+            "php": "7.0.10"
+        }
+    },
+    "require": {
+        "php": "^7.0.10",
+        "doctrine/dbal": "^2.5",
+        "symfony/console": "^3.3"
+    },
+    "require-dev": {
+        "symfony/yaml": "^3.3",
+        "phpoffice/phpexcel": "^1.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "ngyuki\\DbImport\\": "src/"
+        }
+    }
+}

@@ -1,0 +1,20 @@
+---
+
+.row: &row
+  id: null
+  name: yaml
+
+
+aaa:
+  - *row
+  - *row
+
+  - <<: *row
+    name: yaml merge
+
+bbb:
+  - *row
+  - *row
+
+  - <<: *row
+    name: yaml merge

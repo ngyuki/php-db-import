@@ -1,0 +1,4 @@
+#!/usr/bin/env php
+<?php
+/** @noinspection PhpIncludeInspection */
+require __FILE__ . '.php';
