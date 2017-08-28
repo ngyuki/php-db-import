@@ -2,3 +2,4 @@
 /vendor/
 /phpunit.xml
 /.php_cs.cache
+/example/db-import.config.php
