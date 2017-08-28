@@ -95,7 +95,7 @@ class ExcelDataSet implements DataSetInterface
     protected function modifier_date($val)
     {
         if ($val !== null) {
-            return gmdate('Y/m/d H:i:s', PHPExcel_Shared_Date::ExcelToPHP($val));
+            return gmdate('Y/m/d H:i:s', (int)PHPExcel_Shared_Date::ExcelToPHP($val));
         }
         return $val;
     }
@@ -103,7 +103,7 @@ class ExcelDataSet implements DataSetInterface
     protected function modifier_time($val)
     {
         if ($val !== null) {
-            return gmdate('H:i:s', PHPExcel_Shared_Date::ExcelToPHP($val));
+            return gmdate('H:i:s', (int)PHPExcel_Shared_Date::ExcelToPHP($val));
         }
         return $val;
     }
