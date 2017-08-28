@@ -24,6 +24,11 @@ class ExcelDataSet implements DataSetInterface
 
     public function getData()
     {
+        if (preg_match('/\~\$/', basename($this->file))) {
+            // excel の一時ファイルは除外
+            return [];
+        }
+
         $reader = new PHPExcel_Reader_Excel2007();
         $reader->setIncludeCharts(false);
         $reader->setReadDataOnly(true);
