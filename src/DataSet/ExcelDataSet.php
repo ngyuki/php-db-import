@@ -2,7 +2,6 @@
 namespace ngyuki\DbImport\DataSet;
 
 use ngyuki\DbImport\DataRow;
-use ngyuki\DbImport\EmptyValue;
 use PHPExcel_Reader_Excel2007;
 
 class ExcelDataSet implements DataSetInterface
@@ -49,17 +48,6 @@ class ExcelDataSet implements DataSetInterface
                 })) {
                     continue;
                 }
-
-                // 空文字を EmptyValue に変換
-                $assoc = array_map(
-                    function ($v) {
-                        if (strlen($v) === 0) {
-                            return EmptyValue::val();
-                        }
-                        return $v;
-                    },
-                    $assoc
-                );
 
                 $tables[$name][] = new DataRow($assoc, sprintf("%s [%s] (%d)", $this->file, $name, $line + 1));
             }

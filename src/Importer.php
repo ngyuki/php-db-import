@@ -181,10 +181,9 @@ class Importer
                 function () use ($rows, $table) {
                     $num = 0;
                     foreach ($rows as $row) {
-                        $values = $this->query->values($table, $row);
-                        yield null => $values;
+                        yield null => $row;
                         try {
-                            $this->query->insert($table, $values);
+                            $this->query->insert($table, $row);
                         } catch (\Throwable $ex) {
                             if ($row instanceof DataRow) {
                                 throw new RuntimeException(
@@ -192,7 +191,7 @@ class Importer
                                         '%s in %s ... %s',
                                         $ex->getMessage(),
                                         $row->getLocation(),
-                                        $this->pretty($values)
+                                        $this->pretty($row)
                                     ),
                                     $ex->getCode()
                                 );
@@ -202,7 +201,7 @@ class Importer
                                         '%s in [%s] ... %s',
                                         $ex->getMessage(),
                                         $table,
-                                        $this->pretty($values)
+                                        $this->pretty($row)
                                     ),
                                     $ex->getCode()
                                 );
