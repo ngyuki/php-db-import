@@ -17,5 +17,7 @@ create table xxx (
   id int not null primary key auto_increment,
   no int,
   name varchar (255) not null,
-  memo varchar (255)
+  memo varchar (255),
+  date date,
+  time time
 );

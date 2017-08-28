@@ -26,9 +26,30 @@ class ExcelDataSetTest extends TestCase
 
         assertThat($data, equalTo([
             'xxx' => [
-                ['id' => 1, 'no' => 1000, 'name' => 'aa', 'memo' => 'aaa'],
-                ['id' => 2, 'no' => null, 'name' => 'bb', 'memo' => null],
-                ['id' => 3, 'no' => 3000, 'name' => '',   'memo' => 'ccc'],
+                [
+                    'id' => 1,
+                    'no' => 1000,
+                    'name' => 'aa',
+                    'memo' => 'aaa',
+                    'date' => '1999/01/01 00:00:00',
+                    'time' => '12:13:14',
+                ],
+                [
+                    'id' => 2,
+                    'no' => null,
+                    'name' => 'bb',
+                    'memo' => null,
+                    'date' => '9999/12/31 00:00:00',
+                    'time' => '23:59:59'
+                ],
+                [
+                    'id' => null,
+                    'no' => null,
+                    'name' => '',
+                    'memo' => 'ccc',
+                    'date' => null,
+                    'time' => null
+                ],
             ],
         ]));
     }
