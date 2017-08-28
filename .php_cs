@@ -7,6 +7,11 @@ $finder = PhpCsFixer\Finder::create()
 ;
 
 return PhpCsFixer\Config::create()
-    ->setRules(['@PSR2' => true])
+    ->setRules([
+        '@PSR2' => true,
+
+        // list の後のカッコまで消されるけど list はキーワードでは？
+        'no_spaces_after_function_name' => false,
+    ])
     ->setFinder($finder)
 ;
