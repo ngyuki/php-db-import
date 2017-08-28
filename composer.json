@@ -16,7 +16,7 @@
     "require": {
         "php": "^7.0.10",
         "doctrine/dbal": "^2.5",
-        "symfony/console": "^3.3"
+        "symfony/console": "^3.3|^2.8"
     },
     "require-dev": {
         "symfony/yaml": "^3.3",
