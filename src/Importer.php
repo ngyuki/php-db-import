@@ -118,17 +118,19 @@ class Importer
             $list[] = $loader($file);
         }
 
-        return $this->addDataSet($list);
+        $obj = clone $this;
+        $obj->datalist = array_merge($obj->datalist, $list);
+        return $obj;
     }
 
     /**
-     * @param DataSetInterface[] $list
+     * @param DataSetInterface $data
      * @return static
      */
-    public function addDataSet(array $list)
+    public function addDataSet(DataSetInterface $data)
     {
         $obj = clone $this;
-        $obj->datalist = array_merge($obj->datalist, $list);
+        $obj->datalist[] = $data;
         return $obj;
     }
 
