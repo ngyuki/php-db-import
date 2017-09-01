@@ -50,6 +50,28 @@ class ImporterTest extends TestCase
             ]))
             ->import();
 
-        assertTrue(true);
+        $rows = $connection->fetchAll('select * from aaa');
+        assertNotEmpty($rows);
+    }
+
+    /**
+     * @test
+     */
+    public function empty_()
+    {
+        // example に置いた設定ファイルを使うため ... 実際に直接使うときはこんなことしない
+        $example = __DIR__ . '/../example';
+        $config = (new ConfigLoader())->load($example);
+        $connection = (new ConnectionManager())->getConnection($config);
+
+        (new Importer($connection))
+            ->useDelete(true)
+            ->addDataSet(new ArrayDataSet([
+                'aaa' => [],
+            ]))
+            ->import();
+
+        $rows = $connection->fetchAll('select * from aaa');
+        assertEmpty($rows);
     }
 }

@@ -140,6 +140,7 @@ class Importer
 
         foreach ($this->datalist as $dataSet) {
             foreach ($dataSet->getData() as $table => $rows) {
+                $tables[$table] = [];
                 foreach ($rows as $row) {
                     $tables[$table][] = $row;
                 }
