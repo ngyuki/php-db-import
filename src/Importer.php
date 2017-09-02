@@ -7,7 +7,7 @@ use ngyuki\DbImport\DataSet\DataSetInterface;
 use ngyuki\DbImport\DataSet\ExcelDataSet;
 use ngyuki\DbImport\DataSet\PhpFileDataSet;
 use ngyuki\DbImport\DataSet\YamlDataSet;
-use RuntimeException;
+use ngyuki\DbImport\Exception\DatabaseException;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -123,7 +123,7 @@ class Importer
         foreach ($files as $file) {
             $ext = pathinfo($file, PATHINFO_EXTENSION);
             if (!isset($extensions[$ext])) {
-                throw new \RuntimeException(sprintf(
+                throw new \LogicException(sprintf(
                     'Unknown extension file "%s"',
                     $file
                 ));
@@ -185,7 +185,7 @@ class Importer
             }
         } catch (DBALException $ex) {
             // DB エラーでは $previous を切る
-            throw new \RuntimeException($ex->getMessage(), $ex->getCode());
+            throw new DatabaseException($ex->getMessage(), $ex->getCode());
         }
     }
 
@@ -203,7 +203,7 @@ class Importer
                             $this->query->insert($table, $row);
                         } catch (\Throwable $ex) {
                             if ($row instanceof DataRow) {
-                                throw new RuntimeException(
+                                throw new DatabaseException(
                                     sprintf(
                                         '%s in %s ... %s',
                                         $ex->getMessage(),
@@ -213,7 +213,7 @@ class Importer
                                     $ex->getCode()
                                 );
                             } else {
-                                throw new RuntimeException(
+                                throw new DatabaseException(
                                     sprintf(
                                         '%s in [%s] ... %s',
                                         $ex->getMessage(),

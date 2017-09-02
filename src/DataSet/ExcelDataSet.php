@@ -4,6 +4,7 @@ namespace ngyuki\DbImport\DataSet;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Column;
 use ngyuki\DbImport\DataRow;
+use ngyuki\DbImport\Exception\IOException;
 use ngyuki\DbImport\Importer;
 use PHPExcel_Reader_Excel2007;
 use PHPExcel_Shared_Date;
@@ -17,11 +18,11 @@ class ExcelDataSet implements DataSetInterface
         $this->file = realpath($file);
 
         if ($this->file === false) {
-            throw new \RuntimeException("File not found ... $file");
+            throw new IOException("File not found ... $file");
         }
 
         if (is_readable($this->file) === false) {
-            throw new \RuntimeException("File not readable ... $this->file");
+            throw new IOException("File not readable ... $this->file");
         }
     }
 
