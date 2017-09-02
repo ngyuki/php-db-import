@@ -17,10 +17,10 @@ class ImporterTest extends TestCase
      */
     public function test_()
     {
-        // example に置いた設定ファイルを使うため ... 実際に直接使うときはこんなことしない
-        $example = __DIR__ . '/../example';
-        $config = (new ConfigLoader())->load($example);
+        $config = (new ConfigLoader())->load(null);
         $connection = (new ConnectionManager())->getConnection($config);
+
+        $example = __DIR__ . '/../example';
 
         (new Importer($connection))
             ->useDelete(true)
@@ -35,9 +35,7 @@ class ImporterTest extends TestCase
      */
     public function ArrayDataSet()
     {
-        // example に置いた設定ファイルを使うため ... 実際に直接使うときはこんなことしない
-        $example = __DIR__ . '/../example';
-        $config = (new ConfigLoader())->load($example);
+        $config = (new ConfigLoader())->load(null);
         $connection = (new ConnectionManager())->getConnection($config);
 
         (new Importer($connection))
@@ -59,9 +57,7 @@ class ImporterTest extends TestCase
      */
     public function empty_()
     {
-        // example に置いた設定ファイルを使うため ... 実際に直接使うときはこんなことしない
-        $example = __DIR__ . '/../example';
-        $config = (new ConfigLoader())->load($example);
+        $config = (new ConfigLoader())->load(null);
         $connection = (new ConnectionManager())->getConnection($config);
 
         (new Importer($connection))

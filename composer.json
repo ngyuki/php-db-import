@@ -32,6 +32,11 @@
             "ngyuki\\DbImport\\": "src/"
         }
     },
+    "autoload-dev": {
+        "files": [
+            "example/bootstrap.php"
+        ]
+    },
     "bin": [
         "bin/db-import"
     ],

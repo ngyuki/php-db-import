@@ -17,11 +17,10 @@ class ExcelDataSetTest extends TestCase
      */
     public function test_()
     {
-        // example に置いた設定ファイルを使うため ... 実際に直接使うときはこんなことしない
-        $example = __DIR__ . '/../../example';
-        $config = (new ConfigLoader())->load($example);
+        $config = (new ConfigLoader())->load(null);
         $connection = (new ConnectionManager())->getConnection($config);
 
+        $example = __DIR__ . '/../../example';
         $data = new ExcelDataSet("$example/files/004.xlsx");
         $data = $data->getData(new Importer($connection));
 
