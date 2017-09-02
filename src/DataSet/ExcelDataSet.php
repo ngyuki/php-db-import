@@ -1,7 +1,10 @@
 <?php
 namespace ngyuki\DbImport\DataSet;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\Column;
 use ngyuki\DbImport\DataRow;
+use ngyuki\DbImport\Importer;
 use PHPExcel_Reader_Excel2007;
 use PHPExcel_Shared_Date;
 
@@ -22,7 +25,7 @@ class ExcelDataSet implements DataSetInterface
         }
     }
 
-    public function getData()
+    public function getData(Importer $importer)
     {
         if (preg_match('/\~\$/', basename($this->file))) {
             // excel の一時ファイルは除外
@@ -39,7 +42,7 @@ class ExcelDataSet implements DataSetInterface
         foreach ($excel->getSheetNames() as $name) {
             $arr = $excel->getSheetByName($name)->toArray();
 
-            $columns = $this->parseColumns(array_shift($arr));
+            $columns = $this->parseColumns($importer->getConnection(), $name, array_shift($arr));
 
             foreach ($arr as $line => $row) {
                 $assoc = $this->applyColumns($columns, $row);
@@ -58,16 +61,19 @@ class ExcelDataSet implements DataSetInterface
         return $tables;
     }
 
-    private function parseColumns(array $columns)
+    private function parseColumns(Connection $conn, $table, array $names)
     {
+        $columns = $conn->getSchemaManager()->listTableColumns($table);
         $results = [];
 
-        foreach ($columns as $i => $column) {
-            $modifiers = explode('|', $column);
-            $column = trim(array_shift($modifiers));
-            if (strlen($column)) {
-                $results[$i] = [$column, $modifiers];
+        foreach ($names as $i => $name) {
+            $modifiers = explode('|', $name);
+            $name = trim(array_shift($modifiers));
+            if (strlen($name) === 0) {
+                continue;
             }
+            $modifiers = array_merge($modifiers, $this->getModifier($columns, $name));
+            $results[$i] = [$name, $modifiers];
         }
 
         return $results;
@@ -92,7 +98,45 @@ class ExcelDataSet implements DataSetInterface
         return $assoc;
     }
 
-    protected function modifier_date($val)
+    /**
+     * @param Column[] $columns
+     * @param string $name
+     * @return array
+     */
+    private function getModifier($columns, $name)
+    {
+        $modifiers = [];
+
+        if (isset($columns[$name]) === false) {
+            return $modifiers;
+        }
+
+        $column = $columns[$name];
+
+        // NOT NULL かつ自動採番ではないなら NOT NULL 修飾子を適用
+        if ($column->getNotnull() && !$column->getAutoincrement()) {
+            $modifiers[] = 'not_null';
+        }
+
+        $type = strtolower($column->getType()->getName());
+        $method = 'modifier_' . $type;
+
+        if (method_exists($this, $method)) {
+            $modifiers[] = $type;
+        }
+
+        return $modifiers;
+    }
+
+    protected function modifier_not_null($val)
+    {
+        if ($val === null) {
+            return '';
+        }
+        return $val;
+    }
+
+    protected function modifier_datetime($val)
     {
         if ($val !== null) {
             return gmdate('Y/m/d H:i:s', (int)PHPExcel_Shared_Date::ExcelToPHP($val));
@@ -100,10 +144,22 @@ class ExcelDataSet implements DataSetInterface
         return $val;
     }
 
+    protected function modifier_date($val)
+    {
+        if ($val !== null) {
+            if (is_int($val) || is_float($val)) {
+                return gmdate('Y/m/d H:i:s', (int)PHPExcel_Shared_Date::ExcelToPHP($val));
+            }
+        }
+        return $val;
+    }
+
     protected function modifier_time($val)
     {
         if ($val !== null) {
-            return gmdate('H:i:s', (int)PHPExcel_Shared_Date::ExcelToPHP($val));
+            if (is_int($val) || is_float($val)) {
+                return gmdate('H:i:s', (int)PHPExcel_Shared_Date::ExcelToPHP($val));
+            }
         }
         return $val;
     }

@@ -2,6 +2,7 @@
 namespace ngyuki\DbImport\DataSet;
 
 use ngyuki\DbImport\DataRow;
+use ngyuki\DbImport\Importer;
 use Symfony\Component\Yaml\Yaml;
 
 class YamlDataSet implements DataSetInterface
@@ -21,7 +22,7 @@ class YamlDataSet implements DataSetInterface
         }
     }
 
-    public function getData()
+    public function getData(Importer $importer)
     {
         $file = file_get_contents($this->file);
 

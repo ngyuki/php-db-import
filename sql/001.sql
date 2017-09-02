@@ -18,6 +18,7 @@ create table xxx (
   no int,
   name varchar (255) not null,
   memo varchar (255),
+  datetime datetime,
   date date,
   time time
 );

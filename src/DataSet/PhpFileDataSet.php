@@ -1,7 +1,9 @@
 <?php
 namespace ngyuki\DbImport\DataSet;
 
+use Doctrine\DBAL\Connection;
 use ngyuki\DbImport\DataRow;
+use ngyuki\DbImport\Importer;
 
 class PhpFileDataSet implements DataSetInterface
 {
@@ -20,7 +22,7 @@ class PhpFileDataSet implements DataSetInterface
         }
     }
 
-    public function getData()
+    public function getData(Importer $importer)
     {
         /** @noinspection PhpIncludeInspection */
         $arr = include $this->file;

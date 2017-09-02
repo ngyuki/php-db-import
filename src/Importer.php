@@ -15,6 +15,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Importer
 {
     /**
+     * @var Connection
+     */
+    private $conn;
+
+    /**
      * @var Query
      */
     private $query;
@@ -46,8 +51,17 @@ class Importer
 
     public function __construct(Connection $connection, OutputInterface $output = null)
     {
+        $this->conn = $connection;
         $this->query = new Query($connection);
         $this->output = $output ?? new NullOutput();
+    }
+
+    /**
+     * @return Connection
+     */
+    public function getConnection()
+    {
+        return $this->conn;
     }
 
     /**
@@ -139,7 +153,7 @@ class Importer
         $tables = [];
 
         foreach ($this->datalist as $dataSet) {
-            foreach ($dataSet->getData() as $table => $rows) {
+            foreach ($dataSet->getData($this) as $table => $rows) {
                 $tables[$table] = [];
                 foreach ($rows as $row) {
                     $tables[$table][] = $row;

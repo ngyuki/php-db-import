@@ -1,6 +1,8 @@
 <?php
 namespace ngyuki\DbImport\DataSet;
 
+use ngyuki\DbImport\Importer;
+
 interface DataSetInterface
 {
     /**
@@ -22,7 +24,8 @@ interface DataSetInterface
      *  ]
      * </code>
      *
+     * @param Importer $importer
      * @return array
      */
-    public function getData();
+    public function getData(Importer $importer);
 }

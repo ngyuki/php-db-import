@@ -1,6 +1,8 @@
 <?php
 namespace ngyuki\DbImport\DataSet;
 
+use ngyuki\DbImport\Importer;
+
 class ArrayDataSet extends \ArrayIterator implements DataSetInterface
 {
     public function __construct(array $array)
@@ -22,7 +24,7 @@ class ArrayDataSet extends \ArrayIterator implements DataSetInterface
     }
 
 
-    public function getData()
+    public function getData(Importer $importer)
     {
         return $this->getArrayCopy();
     }

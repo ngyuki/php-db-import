@@ -1,7 +1,10 @@
 <?php
 namespace ngyuki\DbImport\Test\DataSet;
 
+use ngyuki\DbImport\Console\ConfigLoader;
+use ngyuki\DbImport\Console\ConnectionManager;
 use ngyuki\DbImport\DataSet\ExcelDataSet;
+use ngyuki\DbImport\Importer;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,9 +17,13 @@ class ExcelDataSetTest extends TestCase
      */
     public function test_()
     {
+        // example に置いた設定ファイルを使うため ... 実際に直接使うときはこんなことしない
         $example = __DIR__ . '/../../example';
+        $config = (new ConfigLoader())->load($example);
+        $connection = (new ConnectionManager())->getConnection($config);
+
         $data = new ExcelDataSet("$example/files/004.xlsx");
-        $data = $data->getData();
+        $data = $data->getData(new Importer($connection));
 
         array_walk_recursive($data, function (&$val) {
             if ($val instanceof \Traversable) {
@@ -33,6 +40,7 @@ class ExcelDataSetTest extends TestCase
                     'memo' => 'aaa',
                     'date' => '1999/01/01 00:00:00',
                     'time' => '12:13:14',
+                    'datetime' => '1999/01/01 00:00:00',
                 ],
                 [
                     'id' => 2,
@@ -40,7 +48,8 @@ class ExcelDataSetTest extends TestCase
                     'name' => 'bb',
                     'memo' => null,
                     'date' => '9999/12/31 00:00:00',
-                    'time' => '23:59:59'
+                    'time' => '23:59:59',
+                    'datetime' => '9999/12/31 23:59:59',
                 ],
                 [
                     'id' => null,
@@ -48,7 +57,8 @@ class ExcelDataSetTest extends TestCase
                     'name' => '',
                     'memo' => 'ccc',
                     'date' => null,
-                    'time' => null
+                    'time' => null,
+                    'datetime' => null,
                 ],
             ],
         ]));
