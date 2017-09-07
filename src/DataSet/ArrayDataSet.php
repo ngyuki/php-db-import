@@ -5,6 +5,8 @@ use ngyuki\DbImport\Importer;
 
 class ArrayDataSet extends \ArrayIterator implements DataSetInterface
 {
+    use DataSetUtil;
+
     public function __construct(array $array)
     {
         // おかしなデータが渡されたことを早期発見する
@@ -26,6 +28,8 @@ class ArrayDataSet extends \ArrayIterator implements DataSetInterface
 
     public function getData(Importer $importer)
     {
-        return $this->getArrayCopy();
+        $arr = $this->getArrayCopy();
+
+        return self::arrayToTables(null, $arr);
     }
 }

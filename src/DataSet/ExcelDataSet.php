@@ -11,6 +11,8 @@ use PHPExcel_Shared_Date;
 
 class ExcelDataSet implements DataSetInterface
 {
+    use DataSetUtil;
+
     private $file;
 
     public function __construct($file)
@@ -42,6 +44,16 @@ class ExcelDataSet implements DataSetInterface
 
         foreach ($excel->getSheetNames() as $name) {
             $arr = $excel->getSheetByName($name)->toArray();
+
+            list ($name, $rotate) = self::fixTableName($name);
+
+            if (strlen($name) === 0) {
+                continue;
+            }
+
+            if ($rotate) {
+                $arr = array_map(null, ...$arr);
+            }
 
             $columns = $this->parseColumns($importer->getConnection(), $name, array_shift($arr));
 

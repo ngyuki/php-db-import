@@ -18,3 +18,8 @@ bbb:
 
   - <<: *row
     name: yaml merge
+
+'@bbb':
+  - [id, name]
+  - [1001, ore]
+  - [1002, are]

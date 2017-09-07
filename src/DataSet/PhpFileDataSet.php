@@ -1,12 +1,13 @@
 <?php
 namespace ngyuki\DbImport\DataSet;
 
-use ngyuki\DbImport\DataRow;
 use ngyuki\DbImport\Exception\IOException;
 use ngyuki\DbImport\Importer;
 
 class PhpFileDataSet implements DataSetInterface
 {
+    use DataSetUtil;
+
     private $file;
 
     public function __construct($file)
@@ -31,14 +32,6 @@ class PhpFileDataSet implements DataSetInterface
             throw new IOException("File read failed ... $this->file");
         }
 
-        $tables = [];
-
-        foreach ($arr as $table => $rows) {
-            foreach ($rows as $row) {
-                $tables[$table][] = new DataRow($row, sprintf("%s [%s]", $this->file, $table));
-            }
-        }
-
-        return $tables;
+        return self::arrayToTables($this->file, $arr);
     }
 }

@@ -1,0 +1,25 @@
+---
+
+.row: &row
+  id: null
+  name: ore
+
+
+aaa:
+  - *row
+  - name: are
+    <<: *row
+
+^bbb:
+  - [id, name]
+  - [1001, sore]
+  - [1002, dore]
+
+"@aaa":
+  - [id, name]
+  - [2001, kore]
+  - [2002, ure]
+
+bbb.x:
+  - id: 999
+    name: xxx
