@@ -20,6 +20,7 @@ class ImportCommand extends Command
             ->addArgument('files', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'Import files.')
             ->addOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Config file or directory.')
             ->addOption('delete', 'd', InputOption::VALUE_NONE, 'First delete all rows from table.')
+            ->addOption('overwrite', 'o', InputOption::VALUE_NONE, 'Overwrite exist rows.')
         ;
     }
 
@@ -40,11 +41,15 @@ class ImportCommand extends Command
         $config = (new ConfigLoader())->load($path);
         $connection = (new ConnectionManager())->getConnection($config);
 
+        /* @var $importer Importer */
         $importer = new Importer($connection, $output);
         $importer = $importer->addBeforeSql($config['sql.before'] ?? []);
         $importer = $importer->addAfterSql($config['sql.after'] ?? []);
         if ($input->getOption('delete')) {
             $importer = $importer->useDelete(true);
+        }
+        if ($input->getOption('overwrite')) {
+            $importer = $importer->useOverwrite(true);
         }
 
         $importer = $importer->addFiles($input->getArgument('files'));

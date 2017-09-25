@@ -63,4 +63,17 @@ class ApplicationTest extends TestCase
         $code = $this->dispatch(array_merge(['import', '-d', '-vvv'], glob("$example/files/*")));
         assertThat($code, equalTo(0));
     }
+
+    /**
+     * @test
+     */
+    public function import_overwrite()
+    {
+        $example = __DIR__ . '/../../example';
+        $code = $this->dispatch(array_merge(['import', '-d'], glob("$example/files/*")));
+        assertThat($code, equalTo(0));
+
+        $code = $this->dispatch(array_merge(['import', '-o'], glob("$example/files/*")));
+        assertThat($code, equalTo(0));
+    }
 }

@@ -35,6 +35,11 @@ class Importer
     private $delete;
 
     /**
+     * @var bool
+     */
+    private $overwrite;
+
+    /**
      * @var string[]
      */
     private $before = [];
@@ -72,6 +77,17 @@ class Importer
     {
         $obj = clone $this;
         $obj->delete = $val;
+        return $obj;
+    }
+
+    /**
+     * @param bool $val
+     * @return static
+     */
+    public function useOverwrite($val)
+    {
+        $obj = clone $this;
+        $obj->overwrite = $val;
         return $obj;
     }
 
@@ -200,7 +216,11 @@ class Importer
                     foreach ($rows as $row) {
                         yield null => $row;
                         try {
-                            $this->query->insert($table, $row);
+                            if ($this->overwrite) {
+                                $this->query->overwrite($table, $row);
+                            } else {
+                                $this->query->insert($table, $row);
+                            }
                         } catch (\Throwable $ex) {
                             if ($row instanceof DataRow) {
                                 throw new DatabaseException(
