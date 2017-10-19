@@ -82,9 +82,8 @@ class Query
             foreach ($values as $column => $value) {
                 if (isset($columns[$column])) {
                     $identifier[$this->conn->quoteIdentifier($column)] = $value;
-                } else {
-                    $data[$this->conn->quoteIdentifier($column)] = $value;
                 }
+                $data[$this->conn->quoteIdentifier($column)] = $value;
             }
 
             return $this->conn->update($table, $data, $identifier);
