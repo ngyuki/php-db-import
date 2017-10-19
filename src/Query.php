@@ -2,6 +2,7 @@
 namespace ngyuki\DbImport;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 class Query
@@ -10,6 +11,11 @@ class Query
      * @var Connection
      */
     private $conn;
+
+    /**
+     * @var null|array
+     */
+    private $refs;
 
     public function __construct(Connection $conn)
     {
@@ -100,5 +106,44 @@ class Query
     {
         return $this->conn->createQueryBuilder()
             ->delete($this->conn->quoteIdentifier($table))->execute();
+    }
+
+    private function collectReference()
+    {
+        if ($this->refs === null) {
+            $this->refs = [];
+            $sm = $this->conn->getSchemaManager();
+            foreach ($sm->listTables() as $table) {
+                foreach ($table->getForeignKeys() as $fkey) {
+                    $this->refs[$fkey->getForeignTableName()][] = $fkey->getLocalTableName();
+                }
+            }
+        }
+    }
+
+    public function visitRecursive(array $tables, callable $callback, \ArrayObject $visits = null)
+    {
+        $this->collectReference();
+
+        if ($visits === null) {
+            $visits = new \ArrayObject();
+        }
+
+        foreach ($tables as $table) {
+
+            if (isset($visits[$table])) {
+                continue;
+            }
+            $visits[$table] = $table;
+
+            try {
+                $callback($table);
+            } catch (ForeignKeyConstraintViolationException $ex) {
+                if (isset($this->refs[$table])) {
+                    $this->visitRecursive($this->refs[$table], $callback, $visits);
+                }
+                $callback($table);
+            }
+        }
     }
 }

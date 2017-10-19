@@ -20,6 +20,7 @@ class ImportCommand extends Command
             ->addArgument('files', InputArgument::REQUIRED|InputArgument::IS_ARRAY, 'Import files.')
             ->addOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Config file or directory.')
             ->addOption('delete', 'd', InputOption::VALUE_NONE, 'First delete all rows from table.')
+            ->addOption('recursive', 'r', InputOption::VALUE_NONE, 'First delete all rows from table with recursive.')
             ->addOption('overwrite', 'o', InputOption::VALUE_NONE, 'Overwrite exist rows.')
         ;
     }
@@ -47,6 +48,9 @@ class ImportCommand extends Command
         $importer = $importer->addAfterSql($config['sql.after'] ?? []);
         if ($input->getOption('delete')) {
             $importer = $importer->useDelete(true);
+        }
+        if ($input->getOption('recursive')) {
+            $importer = $importer->useDelete(true, true);
         }
         if ($input->getOption('overwrite')) {
             $importer = $importer->useOverwrite(true);

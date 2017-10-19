@@ -3,6 +3,7 @@ namespace ngyuki\DbImport;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use ngyuki\DbImport\DataSet\DataSetInterface;
 use ngyuki\DbImport\DataSet\ExcelDataSet;
 use ngyuki\DbImport\DataSet\PhpFileDataSet;
@@ -33,6 +34,11 @@ class Importer
      * @var bool
      */
     private $delete;
+
+    /**
+     * @var bool
+     */
+    private $recursive;
 
     /**
      * @var bool
@@ -71,12 +77,14 @@ class Importer
 
     /**
      * @param bool $val
+     * @param bool $recursive
      * @return static
      */
-    public function useDelete($val)
+    public function useDelete($val, $recursive = false)
     {
         $obj = clone $this;
         $obj->delete = $val;
+        $obj->recursive = $recursive;
         return $obj;
     }
 
@@ -257,10 +265,24 @@ class Importer
     {
         $tables = array_reverse(array_keys($tables));
 
-        foreach ($tables as $table) {
-            $this->output->write("<info>[$table]</info> DELETE .");
-            $num = $this->query->delete($table);
-            $this->output->writeln(".. $num rows done");
+        if ($this->recursive) {
+            $this->query->visitRecursive($tables, function ($table) {
+                $this->output->write("<info>[$table]</info> DELETE .");
+                try {
+                    $num = $this->query->delete($table);
+                    $this->output->writeln(".. $num rows done");
+                } catch (ForeignKeyConstraintViolationException $ex) {
+                    $err = 'foreign key error';
+                    $this->output->writeln(".. <error>$err</error>");
+                    throw $ex;
+                }
+            });
+        } else {
+            foreach ($tables as $table) {
+                $this->output->write("<info>[$table]</info> DELETE .");
+                $num = $this->query->delete($table);
+                $this->output->writeln(".. $num rows done");
+            }
         }
     }
 
