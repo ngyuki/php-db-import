@@ -28,7 +28,6 @@ trait DataSetUtil
         $tables = [];
 
         foreach ($arr as $table => $rows) {
-
             list ($table, $rotate) = self::fixTableName($table);
 
             if (strlen($table) === 0) {

@@ -130,7 +130,6 @@ class Query
         }
 
         foreach ($tables as $table) {
-
             if (isset($visits[$table])) {
                 continue;
             }
