@@ -41,10 +41,19 @@
         "bin/db-import"
     ],
     "scripts": {
-        "qa": [
-            "phpunit",
-            "php-cs-fixer fix --diff --dry-run --ansi -v",
+        "test": [
+            "phpunit --colors"
+        ],
+        "cs": [
+            "php-cs-fixer fix --diff --dry-run --ansi -v"
+        ],
+        "phan": [
             "phan --color -p"
+        ],
+        "qa": [
+            "@composer test",
+            "@composer cs",
+            "@composer phan"
         ]
     }
 }
