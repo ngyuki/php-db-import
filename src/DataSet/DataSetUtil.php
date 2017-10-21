@@ -43,14 +43,21 @@ trait DataSetUtil
                     $rows
                 );
             }
-
-            if ($file === null) {
-                $tables[$table] = $rows;
-            } else {
-                foreach ($rows as $row) {
-                    $tables[$table][] = new DataRow($row, sprintf("%s [%s]", $file, $table));
-                }
+            
+            if ($rows instanceof \Traversable) {
+                $rows = iterator_to_array($rows);
             }
+
+            if ($file !== null) {
+                $rows = array_map(function ($row) use ($file, $table) {
+                    return new DataRow($row, sprintf("%s [%s]", $file, $table));
+                }, $rows);
+            }
+
+            if (!isset($tables[$table])) {
+                $tables[$table] = [];
+            }
+            $tables[$table] = array_merge($tables[$table], $rows);
         }
 
         return $tables;
