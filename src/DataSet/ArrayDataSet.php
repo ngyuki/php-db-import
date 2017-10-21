@@ -16,7 +16,6 @@ class ArrayDataSet extends \ArrayIterator implements DataSetInterface
             foreach ($rows as $row) {
                 assert(is_array($row) || $row instanceof \Traversable);
                 foreach ($row as $column => $val) {
-                    assert(is_string($column));
                     assert(!is_array($val));
                 }
             }
