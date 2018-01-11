@@ -10,3 +10,5 @@ services:
       MYSQL_USER: $MYSQL_USER
       MYSQL_PASSWORD: $MYSQL_PASSWORD
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d:ro
