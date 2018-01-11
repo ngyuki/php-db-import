@@ -20,12 +20,12 @@
     },
     "require-dev": {
         "symfony/yaml": "^3.3",
-        "phpoffice/phpexcel": "^1.8",
+        "phpoffice/phpspreadsheet": "^1.0",
         "ngyuki/phpunit-functions": "^1.0"
     },
     "suggest": {
         "symfony/yaml": "",
-        "phpoffice/phpexcel": ""
+        "phpoffice/phpspreadsheet": ""
     },
     "autoload": {
         "psr-4": {
