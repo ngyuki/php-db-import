@@ -6,8 +6,8 @@ use Doctrine\DBAL\Schema\Column;
 use ngyuki\DbImport\DataRow;
 use ngyuki\DbImport\Exception\IOException;
 use ngyuki\DbImport\Importer;
-use \PhpOffice\PhpSpreadsheet\Reader\Xlsx;
-use \PhpOffice\PhpSpreadsheet\Shared\Date;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class ExcelDataSet implements DataSetInterface
 {
@@ -35,7 +35,7 @@ class ExcelDataSet implements DataSetInterface
             return [];
         }
 
-        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        $reader = new Xlsx();
         $reader->setIncludeCharts(false);
         $reader->setReadDataOnly(true);
         $excel = $reader->load($this->file);
@@ -152,7 +152,7 @@ class ExcelDataSet implements DataSetInterface
     protected function modifier_datetime($val)
     {
         if ($val !== null) {
-            return gmdate('Y/m/d H:i:s', (int)\PhpOffice\PhpSpreadsheet\Shared\Date::excelToTimestamp($val));
+            return gmdate('Y/m/d H:i:s', (int)Date::excelToTimestamp($val));
         }
         return $val;
     }
@@ -161,7 +161,7 @@ class ExcelDataSet implements DataSetInterface
     {
         if ($val !== null) {
             if (is_int($val) || is_float($val)) {
-                return gmdate('Y/m/d H:i:s', (int)\PhpOffice\PhpSpreadsheet\Shared\Date::excelToTimestamp($val));
+                return gmdate('Y/m/d H:i:s', (int)Date::excelToTimestamp($val));
             }
         }
         return $val;
@@ -171,7 +171,7 @@ class ExcelDataSet implements DataSetInterface
     {
         if ($val !== null) {
             if (is_int($val) || is_float($val)) {
-                return gmdate('H:i:s', (int)\PhpOffice\PhpSpreadsheet\Shared\Date::excelToTimestamp($val));
+                return gmdate('H:i:s', (int)Date::excelToTimestamp($val));
             }
         }
         return $val;
