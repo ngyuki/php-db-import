@@ -11,7 +11,7 @@ return [
         'vendor/doctrine/dbal/',
         'vendor/symfony/console/',
         'vendor/symfony/yaml/',
-        'vendor/phpoffice/phpexcel/',
+        'vendor/phpoffice/phpspreadsheet/',
     ],
 
     "exclude_analysis_directory_list" => [
