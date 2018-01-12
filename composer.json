@@ -10,7 +10,11 @@
     ],
     "config": {
         "platform": {
-            "php": "7.0.10"
+            "php": "7.0.10",
+            "ext-gd": "7.0.10"
+        },
+        "preferred-install": {
+            "*": "dist"
         }
     },
     "require": {
