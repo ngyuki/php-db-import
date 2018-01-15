@@ -4,7 +4,7 @@ services:
   mysql:
     image: mysql
     ports:
-      - $MYSQL_TCP_PORT:3306
+      - $MYSQL_PORT:3306
     environment: &environment
       MYSQL_HOST: mysql
       MYSQL_PORT: 3306
