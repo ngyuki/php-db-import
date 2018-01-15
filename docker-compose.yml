@@ -16,7 +16,7 @@ services:
       - ./sql:/docker-entrypoint-initdb.d:ro
 
   php:
-    build: ./
+    image: ngyuki/php-dev:7.0-alpine
     environment:
       <<: *environment
     volumes:
