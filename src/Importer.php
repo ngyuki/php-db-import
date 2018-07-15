@@ -82,9 +82,11 @@ class Importer
      */
     public function useDelete($val, $recursive = false)
     {
+        assert(!$recursive || $val);
+
         $obj = clone $this;
         $obj->delete = $val;
-        $obj->recursive = $recursive;
+        $obj->recursive = $val ? $recursive : false;
         return $obj;
     }
 
