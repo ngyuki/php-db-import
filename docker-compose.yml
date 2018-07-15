@@ -2,7 +2,7 @@ version: '3'
 
 services:
   mysql:
-    image: mysql
+    image: mysql:5.7
     ports:
       - $MYSQL_PORT:3306
     environment: &environment
@@ -16,16 +16,18 @@ services:
       - ./sql:/docker-entrypoint-initdb.d:ro
 
   php:
-    image: ngyuki/php-dev:7.0-alpine
+    image: ngyuki/php-dev:7.0
     environment:
       <<: *environment
     volumes:
       - .:/project:rw
     working_dir: /project
+    stop_signal: SIGKILL
     command:
       - sh
       - -c
       - |
         composer install -o --ansi --prefer-dist
         php -v
+        echo
         tail -f /dev/null
