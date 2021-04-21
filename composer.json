@@ -23,7 +23,8 @@
     "require-dev": {
         "symfony/yaml": "^3.3",
         "phpoffice/phpspreadsheet": "^1.0",
-        "ngyuki/phpunit-functions": "^1.0"
+        "ngyuki/phpunit-functions": "^1.0",
+        "phpunit/phpunit": "^6.5"
     },
     "suggest": {
         "symfony/yaml": "",

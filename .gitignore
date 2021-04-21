@@ -1,6 +1,7 @@
 /build/
 /vendor/
 /phpunit.xml
+/.phpunit.result.cache
 /.php_cs.cache
 /example/config.php
 /.envrc
