@@ -10,8 +10,7 @@
     ],
     "config": {
         "platform": {
-            "php": "7.0.10",
-            "ext-gd": "7.0.10"
+            "php": "7.0.10"
         },
         "preferred-install": {
             "*": "dist"
@@ -19,8 +18,7 @@
     },
     "require": {
         "php": "^7.0.10",
-        "doctrine/dbal": "^2.5",
-        "symfony/console": "^3.3|^2.8"
+        "doctrine/dbal": "^2.5"
     },
     "require-dev": {
         "symfony/yaml": "^3.3",
@@ -36,14 +34,6 @@
             "ngyuki\\DbImport\\": "src/"
         }
     },
-    "autoload-dev": {
-        "files": [
-            "example/bootstrap.php"
-        ]
-    },
-    "bin": [
-        "bin/db-import"
-    ],
     "scripts": {
         "test": [
             "phpunit --colors=always"

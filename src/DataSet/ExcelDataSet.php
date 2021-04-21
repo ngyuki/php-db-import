@@ -62,7 +62,7 @@ class ExcelDataSet implements DataSetInterface
 
                 // すべての列が空の行はスキップ
                 if (!array_filter($assoc, function ($v) {
-                    return strlen($v);
+                    return strlen($v) > 0;
                 })) {
                     continue;
                 }

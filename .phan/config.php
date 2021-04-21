@@ -11,7 +11,6 @@ return [
     'directory_list' => [
         'src/',
         'vendor/doctrine/dbal/',
-        'vendor/symfony/console/',
         'vendor/symfony/yaml/',
         'vendor/phpoffice/phpspreadsheet/',
     ],

@@ -11,7 +11,7 @@ class DataRow extends \ArrayIterator
      */
     private $location;
 
-    public function __construct(array $array = array(), $location)
+    public function __construct(array $array, $location)
     {
         parent::__construct($array);
         $this->location = $location;
