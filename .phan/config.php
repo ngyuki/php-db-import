@@ -2,19 +2,20 @@
 return [
     'file_list' => [],
 
-    'exclude_file_regex' => '@^vendor/.*/(tests|Tests|test|Test)/@',
+    'exclude_file_regex' => '#^vendor/.*/(tests?)/#i',
 
-    'exclude_file_list' => [],
+    'exclude_file_list' => [
+        'vendor/phpoffice/phpspreadsheet/src/PhpSpreadsheet/Worksheet/AutoFilter.php'
+    ],
 
     'directory_list' => [
         'src/',
         'vendor/doctrine/dbal/',
-        'vendor/symfony/console/',
         'vendor/symfony/yaml/',
-        'vendor/phpoffice/phpexcel/',
+        'vendor/phpoffice/phpspreadsheet/',
     ],
 
-    "exclude_analysis_directory_list" => [
+    'exclude_analysis_directory_list' => [
         'vendor/'
     ],
 ];

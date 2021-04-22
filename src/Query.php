@@ -27,6 +27,7 @@ class Query
      */
     public function exec($sql)
     {
+        // @phan-suppress-next-line PhanDeprecatedFunction
         $this->conn->exec($sql);
     }
 

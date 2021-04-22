@@ -9,40 +9,31 @@
         { "name": "ngyuki", "email": "ngyuki.jp@gmail.com" }
     ],
     "config": {
-        "platform": {
-            "php": "7.0.10"
-        }
+        "sort-packages": true,
+        "preferred-install": "dist"
     },
     "require": {
-        "php": "^7.0.10",
-        "doctrine/dbal": "^2.5",
-        "symfony/console": "^3.3|^2.8"
+        "php": "^7.0",
+        "doctrine/dbal": "^2.5"
     },
     "require-dev": {
-        "symfony/yaml": "^3.3",
-        "phpoffice/phpexcel": "^1.8",
-        "ngyuki/phpunit-functions": "^1.0"
+        "symfony/yaml": "^3.3|^4.4|^5.2",
+        "phpoffice/phpspreadsheet": "^1.0",
+        "ngyuki/phpunit-functions": "^1.0",
+        "phpunit/phpunit": "^6.5|^7.5|^8.5"
     },
     "suggest": {
         "symfony/yaml": "",
-        "phpoffice/phpexcel": ""
+        "phpoffice/phpspreadsheet": ""
     },
     "autoload": {
         "psr-4": {
             "ngyuki\\DbImport\\": "src/"
         }
     },
-    "autoload-dev": {
-        "files": [
-            "example/bootstrap.php"
-        ]
-    },
-    "bin": [
-        "bin/db-import"
-    ],
     "scripts": {
         "test": [
-            "phpunit --colors"
+            "phpunit --colors=always"
         ],
         "cs": [
             "php-cs-fixer fix --diff --dry-run --ansi -v"

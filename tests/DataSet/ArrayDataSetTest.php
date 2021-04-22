@@ -1,7 +1,6 @@
 <?php
 namespace ngyuki\DbImport\Test\DataSet;
 
-use ngyuki\DbImport\Console\ConfigLoader;
 use ngyuki\DbImport\Console\ConnectionManager;
 use ngyuki\DbImport\DataSet\ArrayDataSet;
 use ngyuki\DbImport\Importer;
@@ -17,7 +16,7 @@ class ArrayDataSetTest extends TestCase
      */
     public function test_()
     {
-        $config = (new ConfigLoader())->load(null);
+        $config = require __DIR__ . '/../../example/config.php';
         $connection = (new ConnectionManager())->getConnection($config);
 
         $data = new ArrayDataSet([
