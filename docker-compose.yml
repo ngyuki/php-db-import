@@ -16,11 +16,13 @@ services:
       - ./sql:/docker-entrypoint-initdb.d:ro
 
   php:
-    image: ngyuki/php-dev:7.0
+    image: ngyuki/php-dev:${PHP_VERSION:-7.0}
     environment:
       <<: *environment
+      COMPOSER_HOME: /composer
     volumes:
       - .:/project:rw
+      - $HOME/.composer:/composer:rw
     working_dir: /project
     stop_signal: SIGKILL
     command:
